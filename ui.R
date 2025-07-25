@@ -10,7 +10,7 @@ dashboardPage(
   # Sidebar menu ----------------------------------------------------------
   sidebar = dashboardSidebar(
     sidebarMenu(
-      menuItem(text = "Login",
+      menuItem(text = "User",
                icon = icon("shield"), tabName = "login"),
       menuItemOutput(outputId = "post_auth_menus")
     )
@@ -24,7 +24,7 @@ dashboardPage(
       tabItem(
         tabName = "login",
        fluidPage(
-         h1("Login"),
+         # h1("Login"),
          fluidRow(
            uiOutput(outputId = "login_status_window"),
            box(
@@ -53,74 +53,135 @@ dashboardPage(
        )
       ),
 
-      # New donor tab -----------------------------------------------------
+      # New Entry - New Individual ----------------------------------------
       tabItem(
         tabName = "new_donor",
-        h1("Create New Donor"),
+        h1("Add New Donor - Individual"),
         fluidRow(
           box(
             width = 12,
             title = "Donor Details",
             selectInput(
               inputId = "donor_title",
-              label = "Title",
-              choices = c("", "Mr.", "Ms.")
+              label = "Title *",
+              choices = TITLE_OPTIONS
             ),
-            selectInput(
-              inputId = "donor_type",
-              label = "Type",
-              choices = c("donnor_type1", "donnor_type2")
-            ),
+            # selectInput(
+            #   inputId = "donor_type",
+            #   label = "Type",
+            #   choices = c("donnor_type1", "donnor_type2")
+            # ),
             textInput(
               inputId = "donor_fname",
-              label = "First Name",
+              label = "First Name *",
             ),
+            textOutput(outputId = "donor_fname_err"),
             textInput(
               inputId = "donor_mname",
               label = "Middle Name"
             ),
             textInput(
               inputId = "donor_lname",
-              label = "Last Name"
+              label = "Last Name *"
             ),
+            
+            br(),
             hr(),
             h4("Contact Info"),
             selectInput(
-              inputId = "donor_phone_type",
-              label = "Phone Type",
-              choices = c("ptype1", "ptype2")
+              inputId = "donor_phone_type1",
+              label = "Phone Type *",
+              choices = TELEPHONE_TYPES
             ),
             textInput(
-              inputId = "donor_pnum",
-              label = "Phone",
+              inputId = "donor_pnum1",
+              label = "Phone *",
               placeholder = "(xxx) xxx-xxxx"
             ),
-            textInput(
-              inputId = "donor_email",
-              label = "Email"
+            br(),
+            br(),
+            selectInput(
+              inputId = "donor_phone_type2",
+              label = "Phone 2 Type",
+              choices = TELEPHONE_TYPES
             ),
+            textInput(
+              inputId = "donor_pnum2",
+              label = "Phone 2",
+              placeholder = "(xxx) xxx-xxxx"
+            ),
+            br(),
+            br(),
+            selectInput(
+              inputId = "donor_phone_type3",
+              label = "Phone 3 Type",
+              choices = TELEPHONE_TYPES
+            ),
+            textInput(
+              inputId = "donor_pnum3",
+              label = "Phone 3",
+              placeholder = "(xxx) xxx-xxxx"
+            ),
+            br(),
+            br(),
+            textInput(
+              inputId = "donor_email1",
+              label = "Email *"
+            ),
+            textInput(
+              inputId = "donor_email2",
+              label = "Secondary Email"
+            ),
+            
+            br(),
             hr(),
-            h4("Address"),
+            h4("Main Address"),
             textInput(
               inputId = "donor_street",
-              label = "Street Address"
+              label = "Street Address *"
             ),
             textInput(
               inputId = "donor_city",
-              label = "City"
+              label = "City *"
             ),
             textInput(
               inputId = "donor_state",
-              label = "Province / State"
+              label = "Province / State *"
             ),
             textInput(
               inputId = "donor_country",
-              label = "Country"
+              label = "Country *"
             ),
             textInput(
               inputId = "donor_zip",
+              label = "Postal / Zip Code *"
+            ),
+            
+            br(),
+            hr(),
+            h4("Secondary Address"),
+            textInput(
+              inputId = "donor_street2",
+              label = "Street Address"
+            ),
+            textInput(
+              inputId = "donor_city2",
+              label = "City"
+            ),
+            textInput(
+              inputId = "donor_state2",
+              label = "Province / State"
+            ),
+            textInput(
+              inputId = "donor_country2",
+              label = "Country"
+            ),
+            textInput(
+              inputId = "donor_zip2",
               label = "Postal / Zip Code"
             ),
+            
+            br(),
             hr(),
             h4("Company Details"),
             textInput(
@@ -141,6 +202,7 @@ dashboardPage(
               label = "Company Point of Contact Department"
             ),
             
+            br(),
             hr(),
             h4("Spouse Details"),
             actionButton(
@@ -150,6 +212,9 @@ dashboardPage(
             shiny::uiOutput(
               outputId = "donor_spouse_ui"
             ),
+            
+            br(),
+            br(),
             hr(),
             actionButton(
               inputId = "donor_create",
@@ -162,11 +227,59 @@ dashboardPage(
           )
         )
       ),
+      
+      # New Entry - New Company -------------------------------------------
+      tabItem(
+        tabName = "new_company",
+        h1("Add New Donor - Company"),
+        fluidRow(
+          box(
+            width = 12,
+            title = "Company Details",
+            textInput(
+              inputId = "company_name",
+              label = "Company Name *"
+            ),
+            selectInput(
+              inputId = "company_poc_title",
+              label = "Point of Contact Title",
+              choices = TITLE_OPTIONS
+            ),
+            textInput(
+              inputId = "company_poc",
+              label = "Point of Contact Name *"
+            ),
+            textInput(
+              inputId = "company_poc_phone",
+              label = "Point of Contact Telephone *",
+              placeholder = "(xxx) xxx-xxxx"
+            ),
+            textInput(
+              inputId = "company_poc_dep",
+              label = "Point of Contact Department *"
+            ),
+            textInput(
+              inputId = "company_website",
+              label = "Company Website"
+            ),
+            
+            hr(),
+            actionButton(
+              inputId = "company_create",
+              label = "Save"
+            ),
+            actionButton(
+              inputId = "company_cancel",
+              label = "Cancel"
+            )
+          )
+        )
+      ),
 
       # New raffle tab ----------------------------------------------------
       tabItem(
         tabName = "new_raffle",
-        h1("New Raffle"),
+        h1("New Event"),
         fluidRow(
           box(
             width = 12,
@@ -212,10 +325,9 @@ dashboardPage(
               choices = rep(letters[1:5], each = 5),
               multiple = TRUE
             ),
-            selectInput(
+            textInput(
               inputId = "donation_category",
-              label = "Category",
-              choices = c("cat1", "cat2")
+              label = "Category"
             ),
             selectInput(
               inputId = "donation_raffle",
@@ -230,10 +342,7 @@ dashboardPage(
             selectInput(
               inputId = "donation_pay_type",
               label = "Payment Type",
-              choices = c("type1", "type2")
-            ),
-            uiOutput(
-              outputId = "donation_user_created"
+              choices = DONATION_PAY_TYPES
             ),
             hr(),
             actionButton(
@@ -256,11 +365,48 @@ dashboardPage(
         fluidRow(
           box(
             width = 12,
+            collapsible = TRUE, collapsed = FALSE,
+            title = "Quick Start",
+            solidHeader = TRUE, status = "danger",
+            p("Double click a row to edit."),
+            p("Press ctrl + enter to finish editing a row."),
+            p("Press the 'Submit' button at the bottom to save changes permanently.")
+          )
+        ),
+        fluidRow(
+          box(
+            width = 12,
             DT::dataTableOutput(outputId = "donors_table"),
-            actionButton(inputId = "edit_donnor_submit", label = "Submit")
+            actionButton(inputId = "edit_donor_submit", label = "Submit")
+          )
+        )
+      ),
+      
+
+      # Search donations --------------------------------------------------
+      tabItem(
+        tabName = "srch_donations",
+        h1("Donations"),
+        fluidRow(
+          box(
+            width = 12,
+            collapsible = TRUE, collapsed = FALSE,
+            title = "Quick Start",
+            solidHeader = TRUE, status = "danger",
+            p("Double click a row to edit."),
+            p("Press ctrl + enter to finish editing a row."),
+            p("Press the 'Submit' button at the bottom to save changes permanently.")
+          )
+        ),
+        fluidRow(
+          box(
+            width = 12,
+            DT::dataTableOutput(outputId = "donations_table"),
+            actionButton(inputId = "edit_donation_submit", label = "Submit")
           )
         )
       )
+      
       
       
     )

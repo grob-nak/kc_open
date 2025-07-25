@@ -19,13 +19,14 @@ library(DT)
 # Called via namespace
 # library(RSQLite)
 # library(openssl)
+# library(dplyr)
 
 
 # Source aux files --------------------------------------------------------
 r_aux_files <- list.files(path = "R",  pattern = "[.][rR]$")
 
 invisible(sapply(
-  X = file.path("R", r_aux_files), 
+  X = file.path("R", r_aux_files),
   FUN = source
 ))
 

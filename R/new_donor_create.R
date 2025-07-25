@@ -13,6 +13,7 @@ new_donor_create <- function(input, con, session_values){
   # TODO verify if combination of donor name + phone exists
   
   max_donor_id <- dbGetQuery(con, "SELECT MAX(id) as id FROM donors")$id[1]
+  donor_id <- max_donor_id + 1
   
   new_donor_query_base <- "
   INSERT INTO donors (
@@ -38,14 +39,18 @@ new_donor_create <- function(input, con, session_values){
   new_donor_query <- sqlInterpolate(
     con,
     new_donor_query_base,
-    id = max_donor_id + 1,
+    id = donor_id,
     title = input$donor_title,
     fname = input$donor_fname,
     mname = input$donor_mname,
     lname = input$donor_lname,
     type = input$donor_type,
-    phone_type = input$donor_phone_type,
-    phone = input$donor_pnum,
+    phone_type = input$donor_phone_type1,
+    # phone_type = input$donor_phone_type2,
+    # phone_type = input$donor_phone_type3,
+    phone = input$donor_pnum1,
+    # phone2 = input$donor_pnum2,
+    # phone3 = input$donor_pnum3,
     email = input$donor_email,
     street = input$donor_street,
     city = input$donor_city,
@@ -64,6 +69,9 @@ new_donor_create <- function(input, con, session_values){
   )
   
   res <- dbExecute(con, new_donor_query)
+  
+  
+  return(donor_id)
   
 }
 
