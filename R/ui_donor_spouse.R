@@ -4,6 +4,7 @@ ui_donor_spouse <- shiny::tagList(
     label = "Title",
     choices = TITLE_OPTIONS
   ),
+  textOutput(outputId = "donors_fname_err"),
   textInput(
     inputId = "donors_fname",
     label = "First Name *",
@@ -12,6 +13,7 @@ ui_donor_spouse <- shiny::tagList(
     inputId = "donors_mname",
     label = "Middle Name"
   ),
+  textOutput(outputId = "donors_lname_err"),
   textInput(
     inputId = "donors_lname",
     label = "Last Name *"

@@ -66,20 +66,16 @@ dashboardPage(
               label = "Title *",
               choices = TITLE_OPTIONS
             ),
-            # selectInput(
-            #   inputId = "donor_type",
-            #   label = "Type",
-            #   choices = c("donnor_type1", "donnor_type2")
-            # ),
+            textOutput(outputId = "donor_fname_err"),
             textInput(
               inputId = "donor_fname",
               label = "First Name *",
             ),
-            textOutput(outputId = "donor_fname_err"),
             textInput(
               inputId = "donor_mname",
               label = "Middle Name"
             ),
+            textOutput(outputId = "donor_lname_err"),
             textInput(
               inputId = "donor_lname",
               label = "Last Name *"
@@ -93,6 +89,7 @@ dashboardPage(
               label = "Phone Type *",
               choices = TELEPHONE_TYPES
             ),
+            textOutput(outputId = "donor_pnum1_err"),
             textInput(
               inputId = "donor_pnum1",
               label = "Phone *",
@@ -124,6 +121,7 @@ dashboardPage(
             ),
             br(),
             br(),
+            textOutput(outputId = "donor_email1_err"),
             textInput(
               inputId = "donor_email1",
               label = "Email *"
@@ -136,24 +134,29 @@ dashboardPage(
             br(),
             hr(),
             h4("Main Address"),
+            textOutput(outputId = "donor_street1_err"),
             textInput(
-              inputId = "donor_street",
+              inputId = "donor_street1",
               label = "Street Address *"
             ),
+            textOutput(outputId = "donor_city1_err"),
             textInput(
-              inputId = "donor_city",
+              inputId = "donor_city1",
               label = "City *"
             ),
+            textOutput(outputId = "donor_state1_err"),
             textInput(
-              inputId = "donor_state",
+              inputId = "donor_state1",
               label = "Province / State *"
             ),
+            textOutput(outputId = "donor_contry1_err"),
             textInput(
-              inputId = "donor_country",
+              inputId = "donor_country1",
               label = "Country *"
             ),
+            textOutput(outputId = "donor_zip1_err"),
             textInput(
-              inputId = "donor_zip",
+              inputId = "donor_zip1",
               label = "Postal / Zip Code *"
             ),
             
@@ -236,24 +239,39 @@ dashboardPage(
           box(
             width = 12,
             title = "Company Details",
+            textOutput(outputId = "company_name_err"),
             textInput(
               inputId = "company_name",
               label = "Company Name *"
             ),
+            textOutput(outputId = "company_poc_title_err"),
             selectInput(
               inputId = "company_poc_title",
               label = "Point of Contact Title",
               choices = TITLE_OPTIONS
             ),
+            textOutput(outputId = "company_poc_fname_err"),
             textInput(
-              inputId = "company_poc",
-              label = "Point of Contact Name *"
+              inputId = "company_poc_fname",
+              label = "Point of Contact First Name *"
             ),
+            textOutput(outputId = "company_poc_lname_err"),
+            textInput(
+              inputId = "company_poc_lname",
+              label = "Point of Contact Last Name *"
+            ),
+            textOutput(outputId = "company_poc_phone_err"),
             textInput(
               inputId = "company_poc_phone",
               label = "Point of Contact Telephone *",
               placeholder = "(xxx) xxx-xxxx"
             ),
+            textOutput(outputId = "company_poc_email_err"),
+            textInput(
+              inputId = "company_poc_email",
+              label = "Point of Contact Email *"
+            ),
+            textOutput(outputId = "company_poc_dep_err"),
             textInput(
               inputId = "company_poc_dep",
               label = "Point of Contact Department *"

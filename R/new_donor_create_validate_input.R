@@ -34,40 +34,38 @@ new_donor_create_validate_input <- function(input, session_values){
   }
   
   # Address
-  if(gsub(" ", "", input$donor_street) == ""){
-    errors <- rbind(errors, c("donor_street", "Street Name required"))
+  if(gsub(" ", "", input$donor_street1) == ""){
+    errors <- rbind(errors, c("donor_street1", "Street Name required"))
   }
   
-  if(gsub(" ", "", input$donor_city) == ""){
-    errors <- rbind(errors, c("donor_city", "City Name required"))
+  if(gsub(" ", "", input$donor_city1) == ""){
+    errors <- rbind(errors, c("donor_city1", "City Name required"))
   }
   
-  if(gsub(" ", "", input$donor_state) == ""){
-    errors <- rbind(errors, c("donor_state", "State Name required"))
+  if(gsub(" ", "", input$donor_state1) == ""){
+    errors <- rbind(errors, c("donor_state1", "State Name required"))
   }
   
-  if(gsub(" ", "", input$donor_country) == ""){
-    errors <- rbind(errors, c("donor_country", "Country required"))
+  if(gsub(" ", "", input$donor_country1) == ""){
+    errors <- rbind(errors, c("donor_country1", "Country required"))
   }
   
-  if(gsub(" ", "", input$donor_zip) == ""){
-    errors <- rbind(errors, c("donor_zip", "Postal Code required"))
+  if(gsub(" ", "", input$donor_zip1) == ""){
+    errors <- rbind(errors, c("donor_zip1", "Postal Code required"))
   }
   
   
   # Spouse info
   if(session_values$has_spouse){
     if(gsub(" ", "", input$donors_fname) == ""){
-      errors <- rbind(errors, c("donors_fname", "First Name required"))
+      errors <- rbind(errors, c("donors_fname", "Spouse First Name required"))
     }
     
     if(gsub(" ", "", input$donors_lname) == ""){
-      errors <- rbind(errors, c("donors_lname", "Last Name required"))
+      errors <- rbind(errors, c("donors_lname", "Spouse Last Name required"))
     }
   }
   
-  
-  print(errors)
   # Remove dummy row
   errors <- errors[-1,]
   

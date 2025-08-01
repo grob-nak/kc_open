@@ -1,6 +1,6 @@
 
 
-diff_values <- function(x, y){
+which_diff_values <- function(x, y){
   diff_vals <- mapply(
     FUN = function(x, y){
       if(is.na(x)){
@@ -17,7 +17,7 @@ diff_values <- function(x, y){
     y,
     USE.NAMES = TRUE
   )
-  return(diff_vals[diff_vals])
+  return(names(diff_vals[diff_vals]))
 }
 
 

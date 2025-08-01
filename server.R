@@ -181,18 +181,36 @@ server <- function(session, input, output){
     
     new_donor_val <- new_donor_create_validate_input(input, session_values)
     
+    
     if(new_donor_val$valid){
-      print("TODO: Finish adding new donor")
-      # donor_id <- new_donor_create(input, SQL_CON, session_values)
-      session_values$donors_table <- db_get_donors(SQL_CON)
       
-      modalDialog(
-        title = "Donor added successfuly", size = "m"
+      donor_id <- db_new_donor_create(input, SQL_CON, session_values)
+      session_values$donors_table <- db_get_donors(SQL_CON)
+      # Clean previous inputs
+      new_donor_clean(session_values, output)
+      
+      showModal(
+        modalDialog(
+          title = "New Donor added successfuly", size = "m"
+        )  
       )
+      
     } else {
+      # Clear previous errors
+      new_donor_clean_err(session_values, output)
       # Render errors found during input validation
+      showModal(
+        modalDialog(
+          title = "Error: required fields missing.", size = "m",
+          lapply(
+            X = new_donor_val$errors$error_msg,
+            FUN = function(x){
+              p(x)
+            }
+          )
+        )
+      )
       new_donor_create_print_err(output, new_donor_val)
-      print("Some invalid input")
     }
   })
   
@@ -200,7 +218,7 @@ server <- function(session, input, output){
   ## Cancel new donor -----------------------------------------------------
   observeEvent(input$donor_cancel, {
     print("TODO: Finish cleaning donor")
-    new_donor_clean()
+    new_donor_clean(output)
     output$donor_spouse_ui <- renderUI(hr())
     session_values$has_spouse <- FALSE
   })
@@ -231,17 +249,39 @@ server <- function(session, input, output){
   })
   
   
-  ## Submit New Donor form ------------------------------------------------
+  ## Submit New Company form ----------------------------------------------
   observeEvent(input$company_create, {
     print("TODO: Finish company add logic")
     new_company_val <- new_company_create_validate_input(input)
     
     if(new_company_val$valid){
-      company_id <- new_company_create(input, SQL_CON, session_values)
-      # session_values$donors_table <- db_get_donors(SQL_CON)
+      company_id <- db_new_company_create(input, SQL_CON, session_values)
+      session_values$donors_table <- db_get_donors(SQL_CON)
       
-      modalDialog(
-        title = "Company added successfuly", size = "m"
+      showModal(
+        modalDialog(
+          title = "New Company added successfuly", size = "m"
+        )
+      )
+      
+      print("TODO clean new company form")
+      
+    } else {
+      print("Invalid input in new company create")
+      
+      print("TODO PRINT ERRORS NEW COMP CREATE")
+      
+      # Render errors found during input validation
+      showModal(
+        modalDialog(
+          title = "Error: required fields missing.", size = "m",
+          lapply(
+            X = new_company_val$errors$error_msg,
+            FUN = function(x){
+              p(x)
+            }
+          )
+        )
       )
     }
   })
@@ -297,14 +337,27 @@ server <- function(session, input, output){
   
   # Save changes made to the tables 
   observeEvent(input$edit_donor_submit, {
-    print("TODO: Finish sending donor updates to server")
-    print(session_values$donors_table_updates)
+    
+    showModal(
+      modalDialog(
+        "Updating server..."
+      )
+    )
+    
     # Submit all queries stored
-    # res <- sapply(
-    #   X = session_values$donors_table_updates,
-    #   FUN = dbExecute,
-    #   conn = SQL_CON
-    # )
+    res <- sapply(
+      X = session_values$donors_table_updates,
+      FUN = dbExecute,
+      conn = SQL_CON
+    )
+    
+    session_values$donors_table <- db_get_donors(SQL_CON)
+    
+    showModal(
+      modalDialog(
+        "Update complete!"
+      )
+    )
   })
 
   
@@ -348,14 +401,28 @@ server <- function(session, input, output){
   
   # Save changes made to the tables 
   observeEvent(input$edit_donation_submit, {
-    print("TODO: Finish sending donation updates to server")
-    print(session_values$donations_table_updates)
+    
+    showModal(
+      modalDialog(
+        "Updating server..."
+      )
+    )
+    
     # Submit all queries stored
-    # res <- sapply(
-    #   X = session_values$donors_table_updates,
-    #   FUN = dbExecute,
-    #   conn = SQL_CON
-    # )
+    res <- sapply(
+      X = session_values$donations_table_updates,
+      FUN = dbExecute,
+      conn = SQL_CON
+    )
+    
+    session_values$donations_table <- db_get_donations(SQL_CON)
+    
+    showModal(
+      modalDialog(
+        "Update complete!"
+      )
+    )
+    
   })
   
   

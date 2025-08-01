@@ -6,7 +6,7 @@ TELEPHONE_TYPES <- c(
 )
 
 TITLE_OPTIONS <- c(
-  "", "Mr.", "Ms.", "Mrs.", "Other"
+  "Mr.", "Ms.", "Mrs.", "Other"
 )
 
 
