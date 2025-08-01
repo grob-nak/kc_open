@@ -20,8 +20,12 @@ server <- function(session, input, output){
   session_values$donations_table_updates <- character(0)
   
   
+  session_values$events_table <- db_get_events(SQL_CON)
+  
+  
   # Spouse addition
   session_values$has_spouse <- FALSE
+  
   
 
   # Login -----------------------------------------------------------------
@@ -199,27 +203,15 @@ server <- function(session, input, output){
       # Clear previous errors
       new_donor_clean_err(session_values, output)
       # Render errors found during input validation
-      showModal(
-        modalDialog(
-          title = "Error: required fields missing.", size = "m",
-          lapply(
-            X = new_donor_val$errors$error_msg,
-            FUN = function(x){
-              p(x)
-            }
-          )
-        )
-      )
-      new_donor_create_print_err(output, new_donor_val)
+      print_errors(output, new_donor_val)
     }
   })
   
 
   ## Cancel new donor -----------------------------------------------------
   observeEvent(input$donor_cancel, {
-    print("TODO: Finish cleaning donor")
-    new_donor_clean(output)
-    output$donor_spouse_ui <- renderUI(hr())
+    new_donor_clean(session_values, output)
+    output$donor_spouse_ui <- renderUI(p())
     session_values$has_spouse <- FALSE
   })
   
@@ -251,7 +243,6 @@ server <- function(session, input, output){
   
   ## Submit New Company form ----------------------------------------------
   observeEvent(input$company_create, {
-    print("TODO: Finish company add logic")
     new_company_val <- new_company_create_validate_input(input)
     
     if(new_company_val$valid){
@@ -264,32 +255,20 @@ server <- function(session, input, output){
         )
       )
       
-      print("TODO clean new company form")
+      new_company_clean(output)
       
     } else {
-      print("Invalid input in new company create")
-      
-      print("TODO PRINT ERRORS NEW COMP CREATE")
+      # Clear previous error messages
+      new_company_clean_err(output)
       
       # Render errors found during input validation
-      showModal(
-        modalDialog(
-          title = "Error: required fields missing.", size = "m",
-          lapply(
-            X = new_company_val$errors$error_msg,
-            FUN = function(x){
-              p(x)
-            }
-          )
-        )
-      )
+      print_errors(output, new_company_val)
     }
   })
   
   ## Cancel new donor -----------------------------------------------------
   observeEvent(input$company_cancel, {
-    print("TODO: Finish cleaning company")
-    new_company_clean()
+    new_company_clean(output)
   })
   
 
@@ -402,11 +381,9 @@ server <- function(session, input, output){
   # Save changes made to the tables 
   observeEvent(input$edit_donation_submit, {
     
-    showModal(
-      modalDialog(
+    showModal(modalDialog(
         "Updating server..."
-      )
-    )
+    ))
     
     # Submit all queries stored
     res <- sapply(
@@ -417,14 +394,98 @@ server <- function(session, input, output){
     
     session_values$donations_table <- db_get_donations(SQL_CON)
     
-    showModal(
-      modalDialog(
+    showModal(modalDialog(
         "Update complete!"
-      )
-    )
+    ))
     
   })
   
+
+  
+
+  # Edit Events -----------------------------------------------------------
+  output$events_table <- DT::renderDataTable(
+    DT::datatable(session_values$events_table, escape=FALSE, 
+                  options = list(
+                    pageLength = 20, autoWidth = TRUE,
+                    scrollX = TRUE
+                  ),
+                  editable = "row")
+  )
+
+  
+  # New Event -------------------------------------------------------------
+  # Create Event
+  observeEvent(input$raffle_create, {
+    db_new_event_create(input, SQL_CON, session_values)
+    
+    session_values$events_table <- db_get_events(SQL_CON)
+    
+    showModal(modalDialog(
+        "New Event created"
+    ))
+    
+    new_event_clean()
+  })
+  
+  observeEvent(input$raffle_cancel, {
+    new_event_clean()
+  })
+
+  
+  # New Donation ----------------------------------------------------------
+
+  ## selectInput handlers -------------------------------------------------
+  observe({
+    donor_names <- paste(
+      session_values$donors_table$FirstName,
+      session_values$donors_table$LastName
+    )
+    
+    donor_options <- session_values$donors_table$Id
+    names(donor_options) <- donor_names
+    
+    updateSelectInput(
+      inputId = "donation_donor",
+      choices = donor_options
+    )
+  })
+  
+  observe({
+    event_options <- session_values$events_table$Id
+    names(event_options) <- session_values$events_table$Name
+    
+    updateSelectInput(
+      inputId = "donation_raffle",
+      choices = event_options
+    )
+  })
+
+  
+  ## Submit New Donation --------------------------------------------------
+  observeEvent(input$donation_create, {
+    
+    new_donation_val <- new_donation_validate_input(input)
+    
+    if(new_donation_val$valid){
+      db_new_donation(input, SQL_CON, session_values)
+      
+      showModal(modalDialog(
+        "New Donation registered"
+      ))
+      
+      new_donation_clean(output)
+    } else {
+      new_donation_clean_err(output)
+      print_errors(output, new_donation_val)
+    }
+  })
+  
+
+  ## Cancel New Donation ---------------------------------------------------
+  observeEvent(input$donation_cancel, {
+    new_donation_clean_err(output)
+  })
   
   
 }

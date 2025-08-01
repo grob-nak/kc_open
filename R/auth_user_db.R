@@ -8,7 +8,7 @@
 auth_user_db <- function(con, username, user_pwd){
   
   # TODO remove this debug
-  # return(list(status = TRUE, username = "admin"))
+  return(list(status = TRUE, username = "admin"))
   
   username_query_base <- "SELECT * FROM users WHERE username = ?username ;"
   username_query <- sqlInterpolate(

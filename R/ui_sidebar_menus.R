@@ -5,6 +5,8 @@ ui_sidebar_menus <- sidebarMenu(
            icon = icon("list-ul"), tabName = "edit_donor"),
   menuItem(text = "Search Donations",
            icon = icon("list-ul"), tabName = "srch_donations"),
+  menuItem(text = "Search Events",
+           icon = icon("list-ul"), tabName = "srch_events"),
   
   menuItem(text = "New Entry",
            icon = icon("pencil"), tabName = "new_entry",

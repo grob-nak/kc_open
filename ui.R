@@ -294,7 +294,7 @@ dashboardPage(
         )
       ),
 
-      # New raffle tab ----------------------------------------------------
+      # New event tab ----------------------------------------------------
       tabItem(
         tabName = "new_raffle",
         h1("New Event"),
@@ -312,9 +312,6 @@ dashboardPage(
             dateInput(
               inputId = "raffle_end",
               label = "End Date", value = Sys.Date()
-            ),
-            textOutput(
-              outputId = "raffle_user_created"
             ),
             hr(),
             actionButton(
@@ -337,10 +334,11 @@ dashboardPage(
         fluidRow(
           box(
             width = 12,
+            textOutput(outputId = "donation_donor_err"),
             selectInput(
               inputId = "donation_donor",
-              label = "Donor Name",
-              choices = rep(letters[1:5], each = 5),
+              label = "Donor Name *",
+              choices = "",
               multiple = TRUE
             ),
             textInput(
@@ -349,17 +347,18 @@ dashboardPage(
             ),
             selectInput(
               inputId = "donation_raffle",
-              label = "Raffle Name",
-              choices = rep(letters[1:5], each = 5),
+              label = "Raffle Name *",
+              choices = "",
               selectize = TRUE
             ),
+            textOutput(outputId = "donation_amount_err"),
             textInput(
               inputId = "donation_amount",
-              label = "Amount"
+              label = "Amount *"
             ),
             selectInput(
               inputId = "donation_pay_type",
-              label = "Payment Type",
+              label = "Payment Type *",
               choices = DONATION_PAY_TYPES
             ),
             hr(),
@@ -376,7 +375,7 @@ dashboardPage(
       ),
       
       
-      # Edit donor tab ----------------------------------------------------
+      # Search Donors tab -------------------------------------------------
       tabItem(
         tabName = "edit_donor",
         h1("Donor List"),
@@ -421,6 +420,33 @@ dashboardPage(
             width = 12,
             DT::dataTableOutput(outputId = "donations_table"),
             actionButton(inputId = "edit_donation_submit", label = "Submit")
+          )
+        )
+      ),
+      
+      
+
+      # Search Events Tab -------------------------------------------------
+      tabItem(
+        tabName = "srch_events",
+        h1("Event List"),
+        # fluidRow(
+        #   box(
+        #     width = 12,
+        #     collapsible = TRUE, collapsed = FALSE,
+        #     title = "Quick Start",
+        #     solidHeader = TRUE, status = "danger",
+        #     p("Double click a row to edit."),
+        #     p("Press ctrl + enter to finish editing a row."),
+        #     p("Press the 'Submit' button at the bottom to save changes permanently.")
+        #   )
+        # ),
+        fluidRow(
+          box(
+            width = 12,
+            DT::dataTableOutput(outputId = "events_table"),
+            # actionButton(inputId = "edit_donation_submit", label = "Submit"),
+            p()
           )
         )
       )

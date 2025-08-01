@@ -9,7 +9,7 @@ db_create_tables <- function(con){
   dbWriteTable(SQL_CON, "donations", donations)
   
   # Raffles table
-  raffles <- readxl::read_excel("data/mock_database.xlsx", sheet = "Raffle")
-  dbWriteTable(SQL_CON, "raffles", raffles)
+  raffles <- readxl::read_excel("data/mock_database.xlsx", sheet = "Events")
+  dbWriteTable(SQL_CON, "events", raffles)
   
 }
