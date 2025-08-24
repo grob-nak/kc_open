@@ -279,31 +279,101 @@ server <- function(session, input, output){
   # Edit donors -----------------------------------------------------------
   
   output$donors_table <- DT::renderDataTable(
-    DT::datatable(session_values$donors_table, escape=FALSE, 
+    DT::datatable(session_values$donors_table |> 
+                    dplyr::rename(
+                      " " = Id,
+                      "Donor Type" = Type,
+                      "First Name" = FirstName,
+                      "Middle Name" = MiddleName,
+                      "Last Name" = LastName,
+                      "Phone Type 1" = PhoneType1,
+                      "Phone 1" = Phone1,
+                      "Phone Type 2" = PhoneType2,
+                      "Phone 2" = Phone2,
+                      "Phone Type 3" = PhoneType3,
+                      "Phone 3" = Phone3,
+                      "Email 1" = Email1,
+                      "Email 2" = Email2,
+                      "Company Name" = CompanyName,
+                      "Company Contact Name" = CompanyContactName,
+                      "Department" = CompanyContactNameDepartment,
+                      "Company Phone" = CompanyContactPhone,
+                      "Company Webiste" = CompanyWebsite,
+                      "Street 1" = Street1,
+                      "City 1" = City1,
+                      "State 1" = State1,
+                      "Contry 1" = Country1,
+                      "Zip Code 1" = ZipCode1,
+                      "Street 2" = Street2,
+                      "City 2" = City2,
+                      "State 2" = State2,
+                      "Contry 2" = Country2,
+                      "Zip Code 2" = ZipCode2,
+                      "Spouse First Name" = SpouseFirstName,
+                      "Spouse Middle Name" = SpouseMiddleName,
+                      "Spouse Last Name" = SpouseLastName,
+                      "Total Amount Donated" = AccumulatedDonationValue
+                    ), escape=FALSE,
+                  selection = "single",
+                  class = "display nowrap",
                   options = list(
+                    columnDefs = list(list(className = 'dt-center',
+                                           targets = '_all')),
                     pageLength = 20, autoWidth = TRUE,
                     scrollX = TRUE
                   ),
-                  editable = "row")
+                  # editable = list(
+                  #   target = "row",
+                  #   disable = list(columns = c(0, 1, 29, 30, 31, 32))
+                  # ),
+                  rownames = FALSE)
   )
   
+  
+  observeEvent(input$donor_delete, {
+    req(input$donors_table_rows_selected) # Ensure rows are selected
+    print(input$donors_table_rows_selected)
+    
+    row_to_delete <- session_values$donors_table[input$donors_table_rows_selected, ]
+    
+    showModal(modalDialog(
+      paste0("Are you sure you want to delete the ",
+             row_to_delete$Type, " ",
+             row_to_delete$FirstName, " ",
+             row_to_delete$LastName, "?"),
+      br(),
+      actionButton(inputId = "donor_delete_confirm", label = "Yes"),
+      actionButton(inputId = "donor_delete_cancel", label = "No")
+    ))
+  })
+  
+  
+  observeEvent(input$donor_delete_confirm, {
+    print("TODO finish deleting the item in donor list")
+    # Remove selected rows from the database
+    # rv$data <- rv$data[-input$donors_table_rows_selected,]
+    # 
+    # # Update the datatable using a proxy
+    # proxy <- dataTableProxy("donors_table")
+    # replaceData(proxy, rv$data, resetPaging = FALSE)
+  })
   
   # Track changes made to the table
   observeEvent(input$donors_table_cell_edit, {
     # Get row and cols affected
     edt_row <- input$donors_table_cell_edit$row[1]
-    edt_col <- input$donors_table_cell_edit$col[-1]
+    edt_col <- input$donors_table_cell_edit$col + 1 # DT counts from 0
     
     # Get donor ID
     edt_dn_id <- session_values$donors_table$Id[edt_row]
-    
-    # Find values that were changed
+    # Filter original data by ID
     ori_dn_table <- session_values$donors_table |>
       dplyr::filter(Id == edt_dn_id)
 
+    # Find values that were changed
     edt_dn_table <- ori_dn_table
     
-    edt_dn_table[, edt_col] <- input$donors_table_cell_edit$value[-1]
+    edt_dn_table[, edt_col] <- input$donors_table_cell_edit$value
     
     dn_update_query <- edit_donor_get_update(ori_dn_table, edt_dn_table, SQL_CON)
     if(nchar(dn_update_query) > 0){
@@ -404,14 +474,23 @@ server <- function(session, input, output){
   
 
   # Edit Events -----------------------------------------------------------
-  output$events_table <- DT::renderDataTable(
-    DT::datatable(session_values$events_table, escape=FALSE, 
+  output$events_table <- DT::renderDataTable({
+    
+    events_table <- session_values$events_table |> 
+      dplyr::filter(Id != 1)
+    
+    DT::datatable(events_table, escape=FALSE, 
+                  class = "display nowrap",
                   options = list(
                     pageLength = 20, autoWidth = TRUE,
                     scrollX = TRUE
                   ),
-                  editable = "row")
-  )
+                  editable = list(
+                    target = "row",
+                    disable = list(columns = c(0, 7))
+                  ),
+                  rownames = FALSE)
+  })
 
   
   # New Event -------------------------------------------------------------

@@ -197,7 +197,7 @@ dashboardPage(
             ),
             textInput(
               inputId = "donor_company_phone",
-              label = "Company Telephone Contact",
+              label = "Company Telephone",
               placeholder = "(xxx) xxx-xxxx"
             ),
             textInput(
@@ -305,13 +305,16 @@ dashboardPage(
               inputId = "raffle_name",
               label = "Name"
             ),
+            shiny::tags$style(HTML(".datepicker {z-index:99999 !important;}")),
             dateInput(
               inputId = "raffle_start",
-              label = "Start Date", value = Sys.Date()
+              format = "mm-dd-yyyy",
+              label = "Start Date (MM-DD-YYYY)", value = Sys.Date()
             ),
             dateInput(
               inputId = "raffle_end",
-              label = "End Date", value = Sys.Date()
+              format = "mm-dd-yyyy",
+              label = "End Date (MM-DD-YYYY)", value = Sys.Date()
             ),
             hr(),
             actionButton(
@@ -341,15 +344,15 @@ dashboardPage(
               choices = "",
               multiple = TRUE
             ),
+            selectInput(
+              inputId = "donation_raffle",
+              label = "Event Name *",
+              choices = "",
+              selectize = TRUE
+            ),
             textInput(
               inputId = "donation_category",
               label = "Category"
-            ),
-            selectInput(
-              inputId = "donation_raffle",
-              label = "Raffle Name *",
-              choices = "",
-              selectize = TRUE
             ),
             textOutput(outputId = "donation_amount_err"),
             textInput(
@@ -394,7 +397,9 @@ dashboardPage(
           box(
             width = 12,
             DT::dataTableOutput(outputId = "donors_table"),
-            actionButton(inputId = "edit_donor_submit", label = "Submit")
+            actionButton(inputId = "donor_edit", label = "Edit"),
+            actionButton(inputId = "donor_delete", label = "Delete"),
+            # actionButton(inputId = "edit_donor_submit", label = "Submit"),
           )
         )
       ),

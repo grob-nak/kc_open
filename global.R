@@ -4,15 +4,14 @@
 
 
 # Setup libs --------------------------------------------------------------
-
 library(shinydashboard)
 library(shiny)
 library(shinyjs)
 
-library(DBI)
-
 library(stringr)
 library(rebus)
+
+library(DBI)
 
 library(DT)
 
